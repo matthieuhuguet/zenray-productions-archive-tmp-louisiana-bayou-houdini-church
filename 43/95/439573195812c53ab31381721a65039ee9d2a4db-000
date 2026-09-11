@@ -1,0 +1,121 @@
+# 3 Components Proceduraux Houdini : Chapelle Louisiana Bayou
+
+Date : 2026-09-10
+Auteur : ZenRay (@zenray.st)
+Sujet : Houdini Procedural Church / 3 Master Components (Armature, Facade, Perron)
+Format media : 3 Reels Master Retina (3456x2234 a 60 fps) + Format 4:5 Instagram Feed avec bande son dediee
+Fichiers video :
+1. `reel-01-armature-15s-audio.mp4` (Musique : Orpheline, Johanna Baget)
+2. `reel-02-woodfacade-15s-audio.mp4` (Musique : Eikonoklasm)
+3. `reel-03-porchstairs-15s-audio.mp4` (Musique : Clair Obscur Expedition 33, Monoco's Station)
+
+---
+
+## Texte du post (Style Damien Richard 3D Tech Artist)
+
+### Version Francaise
+
+Pendant plusieurs semaines, j'ai bosse sur la modelisation procedurale d'une chapelle bayou sous Houdini pour un rendu sur Unreal Engine. Une question qui parait simple en apparence, mais seulement en apparence, car mon but etait de creer un hero asset reussi et parametrable.
+
+Pour construire cet asset et son design, j'ai d'abord concu trois briques separees :
+- L'armature bois gothique (Component_Armature)
+- La facade en bois (Component_WoodFacade)
+- L'escalier qui mene a l'entree (Component_PorchStairs)
+- Des fenetres non montrees dans cet extrait.
+
+Mais voila le constat lucide : en voulant decouper mon eglise en 3 composants HDA completement independants, j'ai fait une erreur de design d'asset. C'etait seduisant sur le papier, mais en pratique c'est contre-productif : quand je veux modifier la pente du toit ou la largeur de la nef sur l'armature, la facade et l'escalier ne sont pas lies. Je dois reporter chaque cote a la main sous peine de voir des poutres flotter dans le vide.
+
+Trois composants proceduraux solides dans leur coin ne font pas un hero asset fonctionnel tant qu'ils ne partagent pas un cerveau commun. Prochaine etape : interconnecter ces 3 briques dans un master hero asset unifie.
+
+Merci d'avoir pris le temps de regarder et de lire ᕙ(`▿´)ᕗ
+
+### English Version
+
+For several weeks, I've been working on the procedural modeling of a bayou church in Houdini for Unreal Engine rendering. A question that seems simple on the surface, but only on the surface, because my goal was to create a successful, parameter-driven hero asset.
+
+To build this asset and its design, I first designed three separate modules:
+- The Gothic timber armature (Component_Armature)
+- The wood facade (Component_WoodFacade)
+- The stairs leading to the entrance (Component_PorchStairs)
+- Windows not shown in this excerpt.
+
+Here is the honest takeaway though: by wanting to break down my church into 3 completely independent HDA components, I made an asset design mistake. It was appealing on paper, but in practice it is counter-productive: when I want to change the roof pitch or nave width on the armature, the facade and the stairs are not linked. I have to manually copy every dimension by hand, otherwise beams end up floating in thin air.
+
+Three solid procedural components in their own corner do not make a functional hero asset until they share a common brain. Next step: interconnecting these 3 modules into a unified master hero asset.
+
+Thanks for taking the time to watch and read ᕙ(`▿´)ᕗ
+
+---
+
+## Parametres exposes et dynamiques testees en direct (60 fps)
+
+| Composant | Parametres cles animes | Plage testee | Effet visuel observe |
+|---|---|---|---|
+| **01 Armature** | `arch_angle`, `front_gable_height`, `beam_size`, `cross_height` | 55 -> 78 deg, 2.4 -> 3.4 m, 0.11 -> 0.16 m | Galbe circulaire des arbaletriers et elevation du faitage |
+| **02 WoodFacade** | `plank_count`, `plank_thickness`, `plank_overlap`, `wall_height` | 28 -> 42 cours, 0.025 -> 0.055 m, 2.2 -> 2.7 m | Rythme des lattes et biseau d'ombre sous sabliere |
+| **03 PorchStairs** | `step_count`, `porch_width`, `railing_height`, `baluster_spacing` | 6 -> 9 marches, 2.2 -> 3.1 m, 0.9 -> 1.15 m | Hauteur d'acces sur pilotis et densite de fuseaux |
+
+---
+
+## Metadonnees techniques des masters video
+
+- Resolution : 3456 x 2234 pixels (Liquid Retina native Mac, ratio 1.55:1)
+- Format composition Instagram : 1080 x 1350 (ratio 4:5 avec fond floute Black Myth Wukong)
+- Cadence : 60.0 fps constant
+- Codec video : HEVC / H.265 (Main profile, debit master preserve sans recompression)
+- Codec audio : AAC stereo 320 kbps avec fondus d'entree et de sortie d'une seconde
+- Duree : 15.0 secondes par reel
+- Validation UVs : 4.000 texel density verifiee sur 100% des primitives
+
+---
+
+## Workflow Record + Shorts / Reel applique sur ce lot (synthese pour aller a l'essentiel)
+
+Ce dossier rassemble la production complete de 3 Reels 4K de 15 secondes chacun a 60 fps sur la chapelle Louisiana Bayou, realisee en suivant le workflow `zenray-houdini` (Section 7) et `zenray-html-photoshop-pdf-hda-socialmedia` :
+
+### Les 7 etapes cles executees :
+
+1. **Audio Sourcing (yt-dlp + ffmpeg)** :
+   - Telechargement via cookies Chrome de trois musiques de reference (Johanna Baget, Eikonoklasm, Clair Obscur Expedition 33).
+   - Decoupe chirurgicale de chaque piste a 15.0 secondes avec fondu entrant d'une seconde et fondu sortant d'une seconde (`afade=t=in:ss=0:d=1.0,afade=t=out:st=14.0:d=1.0`).
+
+2. **Animation Procedurale des Curseurs (Houdini HOM Python)** :
+   - Animation symetrique en canon (`hou.Keyframe`) sur 4 parametres majeurs par composant (amplitude min -> pic -> min).
+   - Repartition reguliere sur la timeline a 60 fps.
+   - Forcage du focus de fenetre via AppleScript pour empecher la mise en veille GPU par macOS WindowServer pendant la lecture.
+
+3. **Capture OBS Studio Non Intrusive** :
+   - Source `window_capture` ciblee sur la fenetre principale Houdini a 60 images par seconde en definition native Retina (3456x2234).
+   - Declenchement et arret par AppleScript sans deplacement de souris.
+   - Decoupe sans recompression (`-c:v copy`) pour isoler 15.0 secondes et associer la bande sonore.
+
+4. **Redaction Narrative et Extraction 80/20** :
+   - Post concu dans la voix d'artiste technique 3D authentique (style Damien Richard) abordant l'erreur de conception de trois briques isolees et la necessite d'un hero asset unifie.
+   - Extraction mot a mot de 8 repliques courtes (1 replique d'accroche d'1s, puis 7 repliques de 2s) sans aucun ajout de terme arbitraire.
+
+5. **Habillage Vertical 4:5 4K et Auto-Fit Anti-Rognage** :
+   - Composition en 2160x2700 a 60 fps : fond video etire et floute (`boxblur=40:5,eq=brightness=-0.15`), video 16:9 centree a 2160px sans rognage.
+   - Titre haut en `AnthropicSerif-Regular` 138px, couleur blanche sans drop shadow.
+   - Sous-titres animes bicolores en bas : Ligne 1 Jaune (`#FFE600`), Ligne 2 Blanc pur (`#FFFFFF`).
+   - Moteur Pillow avec boucle de reduction (`font_size -= 2`) pour garantir une largeur inferieure a 86% de la largeur d'ecran (zero texte rogne).
+
+6. **Encodage Apple Photos et Instagram Desktop** :
+   - Export en conteneur QuickTime `.mov` avec flux H.264 `avc1` (`-pix_fmt yuv420p -movflags +faststart`) pour contourner le rejet du tag HEVC `hev1` sur iOS.
+   - Les videos s'importent directement dans la pellicule Photos d'iOS et s'envoient sans manipulation mobile sur le site web `instagram.com`.
+
+7. **Thumbnails 9:16 4K (2160x3840)** :
+   - Extraction de la frame a 1 seconde (00:00:01.0) sur chaque Reel.
+   - Ajout de bandes noires pures (`#000000`, 570px en haut et 570px en bas) via `pad=2160:3840:(ow-iw)/2:(oh-ih)/2:color=black`.
+   - Fichiers generes dans le sous-dossier `thumbnails/` aux formats JPG et PNG prets pour YouTube Shorts et Instagram.
+
+### Rangement canonique du dossier :
+- **Racine epuree (4 fichiers stricts)** :
+  1. `post-3components-zenray-houdini.md`
+  2. `reel-01-armature.mov`
+  3. `reel-02-woodfacade.mov`
+  4. `reel-03-porchstairs.mov`
+- **Sous-dossiers techniques** :
+  - `thumbnails/` : vignettes 9:16 4K
+  - `mp4/` : versions miroirs mp4
+  - `raw/` : captures brutes Retina 16:9
+
